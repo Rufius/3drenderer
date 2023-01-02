@@ -18,7 +18,7 @@ stream.Close();
 
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
 {
-    const double dt = 0.01;
+    const double dt = 0.1;
 
     for (double t = 0; t < 1.0; t += dt)
     {
