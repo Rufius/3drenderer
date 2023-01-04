@@ -20,11 +20,34 @@ stream.Close();
 
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
 {
+    bool isSteep = false;
+
+    if (Math.Abs(x0 - x1) < Math.Abs(y0 - y1))
+    {
+        swap(ref x0, ref y0);
+        swap(ref x1, ref y1);
+
+        isSteep = true;
+    }
+
+    if (x0 > x1)
+    {
+        swap(ref x0, ref x1);
+        swap(ref y0, ref y1);
+    }
+
     for (int x = x0; x <= x1; x++)
     {
         double t = (x - x0)/((double)(x1 - x0));
         int y = (int)(y0 + (y1 - y0) * t);
-        image.SetPixel(x, y, color);
+
+        if(isSteep)
+            image.SetPixel(y, x, color); // if transposed, de−transpose 
+        else
+            image.SetPixel(x, y, color);
+
     }
 }
+
+void swap<T>(ref T x, ref T y) => (x, y) = (y, x);
 
