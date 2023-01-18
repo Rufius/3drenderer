@@ -40,7 +40,7 @@ void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
     int dy = y1 - y0;
 
     double error = 0;
-    double derror = Math.Abs(dy / (double) dx);
+    double derror = Math.Abs(dy);
     int y = y0;
 
     for (int x = x0; x <= x1; x++)
@@ -51,10 +51,10 @@ void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
             image.SetPixel(x, y, color);
 
         error += derror;
-        if(error > 1)
+        if(error > dx)
         {
             y += y1 > y0 ? 1 : -1;
-            error -= 1;
+            error -= dx;
         }
     }
 }
