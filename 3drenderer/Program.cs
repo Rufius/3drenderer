@@ -36,16 +36,26 @@ void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
         swap(ref y0, ref y1);
     }
 
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+
+    double error = 0;
+    double derror = Math.Abs(dy / (double) dx);
+    int y = y0;
+
     for (int x = x0; x <= x1; x++)
     {
-        double t = (x - x0)/((double)(x1 - x0));
-        int y = (int)(y0 + (y1 - y0) * t);
-
         if(isSteep)
             image.SetPixel(y, x, color); // if transposed, de−transpose 
         else
             image.SetPixel(x, y, color);
 
+        error += derror;
+        if(error > 1)
+        {
+            y += y1 > y0 ? 1 : -1;
+            error -= 1;
+        }
     }
 }
 
