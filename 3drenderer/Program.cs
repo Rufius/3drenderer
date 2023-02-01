@@ -2,30 +2,35 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-const int width = 1000;
-const int height = 1000;
+const int width = 200;
+const int height = 200;
 
-Bitmap image = new Bitmap(width+1, height+1);
+Bitmap image = new Bitmap(width, height);
 
-var model = Model.Load("Assets//head.obj");
-
-for (int i = 0; i < model.Faces.Count(); i++)
+var triangle0 = new Tuple<int, int>[3]
 {
-    var face = model.Faces[i];
-    for (int j = 0; j < face.Count(); j++)
-    {
-        var v0 = model.Vertices[face[j]];
-        var v1 = model.Vertices[face[(j+1)%face.Count()]];
+    new Tuple<int, int> (10, 70),
+    new Tuple<int, int> (50, 160),
+    new Tuple<int, int> (70, 80)
+};
 
-        var x0 = (int)(width/2 + v0.X*(width/2));
-        var y0 = (int)(height/2 + v0.Y*(height/2));
+var triangle1 = new Tuple<int, int>[3]
+{
+    new Tuple<int, int> (180, 50),
+    new Tuple<int, int> (150, 1),
+    new Tuple<int, int> (70, 180)
+};
 
-        var x1 = (int)(width /2 + v1.X*(width/2));
-        var y1 = (int)(height /2 + v1.Y*(height/2));
+var triangle2 = new Tuple<int, int>[3]
+{
+    new Tuple<int, int> (180, 150),
+    new Tuple<int, int> (120, 160),
+    new Tuple<int, int> (130, 180)
+};
 
-        DrawLine(x0, y0, x1, y1, image, Color.White);
-    }
-}
+DrawTriangle(triangle0[0], triangle0[1], triangle0[2], image, Color.Red);
+DrawTriangle(triangle1[0], triangle1[1], triangle1[2], image, Color.White);
+DrawTriangle(triangle2[0], triangle2[1], triangle2[2], image, Color.Green);
 
 image.RotateFlip(RotateFlipType.RotateNoneFlipY); // I want to have the origin at the left bottom corner of the image
 
