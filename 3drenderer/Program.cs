@@ -34,6 +34,13 @@ image.Save(stream, ImageFormat.Bmp);
 stream.Close();
 
 
+void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bitmap image, Color color)
+{
+    DrawLine(t0.Item1, t0.Item2, t1.Item1, t1.Item2, image, color);
+    DrawLine(t1.Item1, t1.Item2, t2.Item1, t2.Item2, image, color);
+    DrawLine(t2.Item1, t2.Item2, t0.Item1, t0.Item2, image, color);
+}
+
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
 {
     bool isSteep = false;
