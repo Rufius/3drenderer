@@ -45,9 +45,21 @@ void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bit
     if (t0.Item2 > t2.Item2) Swap(ref t0, ref t2);
     if (t1.Item2 > t2.Item2) Swap(ref t1, ref t2);
 
-    DrawLine(t0.Item1, t0.Item2, t1.Item1, t1.Item2, image, Color.Green);
-    DrawLine(t1.Item1, t1.Item2, t2.Item1, t2.Item2, image, Color.Green);
-    DrawLine(t2.Item1, t2.Item2, t0.Item1, t0.Item2, image, Color.Red);
+    int total_height = t2.Item2 - t0.Item2;
+    int segment_height = t1.Item2 - t0.Item2 + 1;
+
+    for (int y = t0.Item2; y <= t1.Item2; y++)
+    {
+        float alpha = (float)(y - t0.Item2) / total_height;
+        float betha = (float)(y - t0.Item2) / segment_height;
+
+        int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
+        int bx = (int)(t0.Item1 + (t1.Item1 - t0.Item1) * betha);
+
+        image.SetPixel(ax, y, Color.Red);
+        image.SetPixel(bx, y, Color.Green);
+    }
+
 }
 
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
