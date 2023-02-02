@@ -41,9 +41,13 @@ stream.Close();
 
 void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bitmap image, Color color)
 {
-    DrawLine(t0.Item1, t0.Item2, t1.Item1, t1.Item2, image, color);
-    DrawLine(t1.Item1, t1.Item2, t2.Item1, t2.Item2, image, color);
-    DrawLine(t2.Item1, t2.Item2, t0.Item1, t0.Item2, image, color);
+    if (t0.Item2 > t1.Item2) Swap(ref t0, ref t1);
+    if (t0.Item2 > t2.Item2) Swap(ref t0, ref t2);
+    if (t1.Item2 > t2.Item2) Swap(ref t1, ref t2);
+
+    DrawLine(t0.Item1, t0.Item2, t1.Item1, t1.Item2, image, Color.Green);
+    DrawLine(t1.Item1, t1.Item2, t2.Item1, t2.Item2, image, Color.Green);
+    DrawLine(t2.Item1, t2.Item2, t0.Item1, t0.Item2, image, Color.Red);
 }
 
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
@@ -52,16 +56,16 @@ void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
 
     if (Math.Abs(x0 - x1) < Math.Abs(y0 - y1))
     {
-        swap(ref x0, ref y0);
-        swap(ref x1, ref y1);
+        Swap(ref x0, ref y0);
+        Swap(ref x1, ref y1);
 
         isSteep = true;
     }
 
     if (x0 > x1)
     {
-        swap(ref x0, ref x1);
-        swap(ref y0, ref y1);
+        Swap(ref x0, ref x1);
+        Swap(ref y0, ref y1);
     }
 
     int dx = x1 - x0;
@@ -87,5 +91,5 @@ void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
     }
 }
 
-void swap<T>(ref T x, ref T y) => (x, y) = (y, x);
+void Swap<T>(ref T x, ref T y) => (x, y) = (y, x);
 
