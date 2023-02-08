@@ -1,5 +1,4 @@
-﻿using _3drenderer;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 
 const int width = 200;
@@ -46,20 +45,42 @@ void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bit
     if (t1.Item2 > t2.Item2) Swap(ref t1, ref t2);
 
     int total_height = t2.Item2 - t0.Item2;
-    int segment_height = t1.Item2 - t0.Item2 + 1;
+
+    int segment_height1 = t1.Item2 - t0.Item2 + 1;
 
     for (int y = t0.Item2; y <= t1.Item2; y++)
     {
         float alpha = (float)(y - t0.Item2) / total_height;
-        float betha = (float)(y - t0.Item2) / segment_height;
+        float betha = (float)(y - t0.Item2) / segment_height1;
 
         int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
         int bx = (int)(t0.Item1 + (t1.Item1 - t0.Item1) * betha);
 
-        image.SetPixel(ax, y, Color.Red);
-        image.SetPixel(bx, y, Color.Green);
+        if (ax > bx) Swap(ref ax, ref bx);
+
+        for (int j = ax; j <= bx; j++)
+        {
+            image.SetPixel(j, y, color);
+        }
     }
 
+    int segment_height2 = t2.Item2 - t1.Item2 + 1;
+
+    for (int y = t1.Item2; y <= t2.Item2; y++)
+    {
+        float alpha = (float)(y - t0.Item2) / total_height;
+        float betha = (float)(y - t1.Item2) / segment_height2;
+
+        int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
+        int bx = (int)(t1.Item1 + (t2.Item1 - t1.Item1) * betha);
+
+        if (ax > bx) Swap(ref ax, ref bx);
+
+        for (int j = ax; j <= bx; j++)
+        {
+            image.SetPixel(j, y, color);
+        }
+    }
 }
 
 void DrawLine(int x0, int y0, int x1, int y1, Bitmap image, Color color)
