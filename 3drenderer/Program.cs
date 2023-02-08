@@ -48,37 +48,23 @@ void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bit
 
     int segment_height1 = t1.Item2 - t0.Item2 + 1;
 
-    for (int y = t0.Item2; y <= t1.Item2; y++)
+    for (int i = 0; i < total_height; i++)
     {
-        float alpha = (float)(y - t0.Item2) / total_height;
-        float betha = (float)(y - t0.Item2) / segment_height1;
+        bool isSecondHalf = i > t1.Item2 - t0.Item2 || t1.Item2 == t0.Item2;
+
+        int segment_height = isSecondHalf ? t2.Item2 - t1.Item2 : t1.Item2 - t0.Item2;
+
+        float alpha = (float) i / total_height;
+        float beta = (float)(i - (isSecondHalf ? t1.Item2 - t0.Item2 : 0)) / segment_height;
 
         int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
-        int bx = (int)(t0.Item1 + (t1.Item1 - t0.Item1) * betha);
+        int bx = isSecondHalf ? (int)(t1.Item1 + (t2.Item1 - t1.Item1) * beta) : (int)(t0.Item1 + (t1.Item1 - t0.Item1) * beta);
 
         if (ax > bx) Swap(ref ax, ref bx);
 
         for (int j = ax; j <= bx; j++)
         {
-            image.SetPixel(j, y, color);
-        }
-    }
-
-    int segment_height2 = t2.Item2 - t1.Item2 + 1;
-
-    for (int y = t1.Item2; y <= t2.Item2; y++)
-    {
-        float alpha = (float)(y - t0.Item2) / total_height;
-        float betha = (float)(y - t1.Item2) / segment_height2;
-
-        int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
-        int bx = (int)(t1.Item1 + (t2.Item1 - t1.Item1) * betha);
-
-        if (ax > bx) Swap(ref ax, ref bx);
-
-        for (int j = ax; j <= bx; j++)
-        {
-            image.SetPixel(j, y, color);
+            image.SetPixel(j, t0.Item2 + i, color);
         }
     }
 }
