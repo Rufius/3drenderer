@@ -1,35 +1,29 @@
-﻿using System.Drawing;
+﻿using _3drenderer;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Numerics;
 
-const int width = 200;
-const int height = 200;
+const int width = 1000;
+const int height = 1000;
 
-Bitmap image = new Bitmap(width, height);
+var rand = new Random();
 
-var triangle0 = new Tuple<int, int>[3]
+Bitmap image = new Bitmap(width + 1, height + 1);
+
+var model = Model.Load("Assets//head.obj");
+
+for (int i = 0; i < model.Faces.Count(); i++)
 {
-    new Tuple<int, int> (10, 70),
-    new Tuple<int, int> (50, 160),
-    new Tuple<int, int> (70, 80)
-};
+    var face = model.Faces[i];
+    var screenCoords = new Tuple<int, int>[3];
+    for (int j = 0; j < face.Count(); j++)
+    {
+        var wordCoords = model.Vertices[face[j]];
+        screenCoords[j] = new Tuple<int, int>((int)((wordCoords.X + 1) * width / 2), (int)((wordCoords.Y + 1) * height / 2));
+    }
 
-var triangle1 = new Tuple<int, int>[3]
-{
-    new Tuple<int, int> (180, 50),
-    new Tuple<int, int> (150, 1),
-    new Tuple<int, int> (70, 180)
-};
-
-var triangle2 = new Tuple<int, int>[3]
-{
-    new Tuple<int, int> (180, 150),
-    new Tuple<int, int> (120, 160),
-    new Tuple<int, int> (130, 180)
-};
-
-DrawTriangle(triangle0[0], triangle0[1], triangle0[2], image, Color.Red);
-DrawTriangle(triangle1[0], triangle1[1], triangle1[2], image, Color.White);
-DrawTriangle(triangle2[0], triangle2[1], triangle2[2], image, Color.Green);
+    DrawTriangle(screenCoords[0], screenCoords[1], screenCoords[2], image, Color.FromArgb(rand.Next(255), rand.Next(255), rand.Next(255)));
+}
 
 image.RotateFlip(RotateFlipType.RotateNoneFlipY); // I want to have the origin at the left bottom corner of the image
 
@@ -45,8 +39,6 @@ void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bit
     if (t1.Item2 > t2.Item2) Swap(ref t1, ref t2);
 
     int total_height = t2.Item2 - t0.Item2;
-
-    int segment_height1 = t1.Item2 - t0.Item2 + 1;
 
     for (int i = 0; i < total_height; i++)
     {
