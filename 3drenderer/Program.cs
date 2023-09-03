@@ -15,11 +15,11 @@ var model = Model.Load("Assets//head.obj");
 for (int i = 0; i < model.Faces.Count(); i++)
 {
     var face = model.Faces[i];
-    var screenCoords = new Tuple<int, int>[3];
+    var screenCoords = new MyVector2[3];
     for (int j = 0; j < face.Count(); j++)
     {
         var wordCoords = model.Vertices[face[j]];
-        screenCoords[j] = new Tuple<int, int>((int)((wordCoords.X + 1) * width / 2), (int)((wordCoords.Y + 1) * height / 2));
+        screenCoords[j] = new MyVector2((int)((wordCoords.X + 1) * width / 2), (int)((wordCoords.Y + 1) * height / 2));
     }
 
     DrawTriangle(screenCoords[0], screenCoords[1], screenCoords[2], image, Color.FromArgb(rand.Next(255), rand.Next(255), rand.Next(255)));
@@ -32,31 +32,31 @@ image.Save(stream, ImageFormat.Bmp);
 stream.Close();
 
 
-void DrawTriangle(Tuple<int,int> t0, Tuple<int, int> t1, Tuple<int, int> t2, Bitmap image, Color color)
+void DrawTriangle(MyVector2 t0, MyVector2 t1, MyVector2 t2, Bitmap image, Color color)
 {
-    if (t0.Item2 > t1.Item2) Swap(ref t0, ref t1);
-    if (t0.Item2 > t2.Item2) Swap(ref t0, ref t2);
-    if (t1.Item2 > t2.Item2) Swap(ref t1, ref t2);
+    if (t0.Y > t1.Y) Swap(ref t0, ref t1);
+    if (t0.Y > t2.Y) Swap(ref t0, ref t2);
+    if (t1.Y > t2.Y) Swap(ref t1, ref t2);
 
-    int total_height = t2.Item2 - t0.Item2;
+    int total_height = t2.Y - t0.Y;
 
     for (int i = 0; i < total_height; i++)
     {
-        bool isSecondHalf = i > t1.Item2 - t0.Item2 || t1.Item2 == t0.Item2;
+        bool isSecondHalf = i > t1.Y - t0.Y || t1.Y == t0.Y;
 
-        int segment_height = isSecondHalf ? t2.Item2 - t1.Item2 : t1.Item2 - t0.Item2;
+        int segment_height = isSecondHalf ? t2.Y - t1.Y : t1.Y - t0.Y;
 
         float alpha = (float) i / total_height;
-        float beta = (float)(i - (isSecondHalf ? t1.Item2 - t0.Item2 : 0)) / segment_height;
+        float beta = (float)(i - (isSecondHalf ? t1.Y - t0.Y : 0)) / segment_height;
 
-        int ax = (int)(t0.Item1 + (t2.Item1 - t0.Item1) * alpha);
-        int bx = isSecondHalf ? (int)(t1.Item1 + (t2.Item1 - t1.Item1) * beta) : (int)(t0.Item1 + (t1.Item1 - t0.Item1) * beta);
+        int ax = (int)(t0.X + (t2.X - t0.X) * alpha);
+        int bx = isSecondHalf ? (int)(t1.X + (t2.X - t1.X) * beta) : (int)(t0.X + (t1.X - t0.X) * beta);
 
         if (ax > bx) Swap(ref ax, ref bx);
 
         for (int j = ax; j <= bx; j++)
         {
-            image.SetPixel(j, t0.Item2 + i, color);
+            image.SetPixel(j, t0.Y + i, color);
         }
     }
 }
